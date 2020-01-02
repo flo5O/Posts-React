@@ -1,26 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import ReactDom from 'react-dom'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const BASE_URL = "https://jsonplaceholder.typicode.com/posts"
+export default class App extends Component {
+
+  state = {
+    isLoading: false,
+    error: null,
+    posts: []
+  }
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    fetch(BASE_URL)
+      .then(res => {
+        if (res.ok) {
+          return res.json()
+        } else {
+          throw Error("Error fetching posts!")
+        }
+      })
+      .then(posts => {
+        //console.log(posts)
+        this.setState({ posts: posts, isLoading: false })
+      })
+      .catch(error => this.setState({ error }))
+  }
+  render() {
+    const { posts, error, isLoading } = this.state
+    if (error) {
+      return <p style={{ color: 'red' }}>{this.state.error.message}</p>
+    }
+    if (isLoading) {
+      return <p>Loading Posts...</p>
+    }
+    return (
+      <div>
+        <h1>Posts</h1>
+        {posts.map(post => (
+          <div>
+            <h3>{post.title}</h3>
+            <body>{post.body}</body>
+          </div>
+        ))}
+
+      </div>
+    )
+  }
 }
-
-export default App;
