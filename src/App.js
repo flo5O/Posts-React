@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ReactDom from 'react-dom'
+
 
 const BASE_URL = "https://jsonplaceholder.typicode.com/posts"
 export default class App extends Component {
